@@ -12,9 +12,6 @@
  *      browser of the connected device: mobile/laptop/computer. 
  *      Moreover, the sensor data from the Thing is displayed 
  *      on the webpage.
- *
- * Default name of the thing: testThing //Initial Name of the Thing, where it is used as the SSID of its own Access Point
- * Default password: smrtTHNG8266 // Initial password to connect to the Thing, when it creates its own Access Point
  */
 
 #include "Button2.h"      // Lib for OLED display
@@ -29,8 +26,8 @@ SSD1306Wire  display(0x3c,5,4); // create an SSD1306Wire object with name
 Adafruit_BME280 bme; // create BM280 object using I2C with name "bme"
 
 // Web Config Portal
-const char thingName[] = "IotWebConfServer";
-const char wifiInitialApPassword[] = "123456789";
+const char thingName[] = "IotWebConfServer";      // Default name: testThing
+const char wifiInitialApPassword[] = "123456789"; // Default pwd: smrtTHNG8266
 
 #define STRING_LEN 128
 #define NUMBER_LEN 32
