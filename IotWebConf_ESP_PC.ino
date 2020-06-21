@@ -1,23 +1,7 @@
-/*
- * Contributors:  Christian Richardson Quiday Escobia
- *                Le Thanh Tung
- *                Duong Thanh Minh
- *                Nguyen Tran Minh Luan
- *
- * Description: 
- *      This project demonstrates how WiFi connection settings 
- *      can be managed through a Captive Portal provided by 
- *      the IotWebConf library. One major highlight is that the 
- *      "Sign in to network" automatically pops up in the 
- *      browser of the connected device: mobile/laptop/computer. 
- *      Moreover, the sensor data from the Thing is displayed 
- *      on the webpage.
- */
-
 #include "Button2.h"      // Lib for OLED display
 #include "SSD1306Wire.h"  // Lib for environment sensor BME280
-#include <Adafruit_BME280.h>    // Lib for handling button events
-#include <IotWebConf.h>   // Lib for web configuration portal
+#include  <Adafruit_BME280.h>         // Lib for handling button events
+#include <IotWebConf.h>
 
 SSD1306Wire  display(0x3c,5,4); // create an SSD1306Wire object with name 
                                 // "display" with I2C at the pins 5 and 4 and
@@ -25,18 +9,15 @@ SSD1306Wire  display(0x3c,5,4); // create an SSD1306Wire object with name
 
 Adafruit_BME280 bme; // create BM280 object using I2C with name "bme"
 
-// Web Config Portal
-const char thingName[] = "IotWebConfServer";      // Default name: testThing
-const char wifiInitialApPassword[] = "123456789"; // Default pwd: smrtTHNG8266
+//Wifi config
+const char thingName[] = "Rerorerorerorero!";
+const char wifiInitialApPassword[] = "landesstelle";
 
-#define STRING_LEN 128
-#define NUMBER_LEN 32
-
-// Configuration specific key. The value should be modified if config structure was changed.
+// -- Configuration specific key. The value should be modified if config structure was changed.
 #define CONFIG_VERSION "dem1"
 
-// When CONFIG_PIN is pulled to ground on startup, the Thing will use the initial
-// password to build an AP. (E.g. in case of lost password)
+// -- When CONFIG_PIN is pulled to ground on startup, the Thing will use the initial
+//      password to build an AP. (E.g. in case of lost password)
 #define CONFIG_PIN 14
 
 // -- Status indicator pin.
@@ -46,21 +27,10 @@ const char wifiInitialApPassword[] = "123456789"; // Default pwd: smrtTHNG8266
 
 // -- Callback method declarations.
 void configSaved();
-boolean formValidator();
 DNSServer dnsServer;
 WebServer server(80);
 
-char stringParamValue[STRING_LEN];
-char intParamValue[NUMBER_LEN];
-char floatParamValue[NUMBER_LEN];
-
 IotWebConf iotWebConf(thingName, &dnsServer, &server, wifiInitialApPassword, CONFIG_VERSION);
-IotWebConfParameter stringParam = IotWebConfParameter("String param", "stringParam", stringParamValue, STRING_LEN);
-IotWebConfSeparator separator1 = IotWebConfSeparator();
-IotWebConfParameter intParam = IotWebConfParameter("Int param", "intParam", intParamValue, NUMBER_LEN, "number", "1..100", NULL, "min='1' max='100' step='1'");
-// -- We can add a legend to the separator
-IotWebConfSeparator separator2 = IotWebConfSeparator("Calibration factor");
-IotWebConfParameter floatParam = IotWebConfParameter("Float param", "floatParam", floatParamValue, NUMBER_LEN, "number", "e.g. 23.4", NULL, "step='0.1'");
 
 unsigned long intervals[3][2] = {{1000,0},{60000,0},{5000,0}}; /* {{1s interval,prev_millis},{1s interval,prev_millis},{1min interval,prev_millis}} */
 unsigned long current_millis = 0;
@@ -113,13 +83,7 @@ void setup() {
 
     iotWebConf.setStatusPin(STATUS_PIN);
     iotWebConf.setConfigPin(CONFIG_PIN);
-    iotWebConf.addParameter(&stringParam);
-    iotWebConf.addParameter(&separator1);
-    iotWebConf.addParameter(&intParam);
-    iotWebConf.addParameter(&separator2);
-    iotWebConf.addParameter(&floatParam);
     iotWebConf.setConfigSavedCallback(&configSaved);
-    iotWebConf.setFormValidator(&formValidator);
     iotWebConf.getApTimeoutParameter()->visible = true;
     iotWebConf.init();
     server.on("/", handleRoot);
@@ -260,12 +224,6 @@ void handleRoot()
   String s = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no\"/>";
   s += "<title>IotWebConf 03 Custom Parameters</title></head><body>Hello world!";
   s += "<ul>";
-  s += "<li>String param value: ";
-  s += stringParamValue;
-  s += "<li>Int param value: ";
-  s += atoi(intParamValue);
-  s += "<li>Float param value: ";
-  s += atof(floatParamValue);
   s += "<li>Temperature: ";
   s += (String)temperature + " C";
   s += "<li>Pressure: ";
@@ -288,19 +246,4 @@ void handleRoot()
 void configSaved()
 {
   Serial.println("Configuration was updated.");
-}
-
-boolean formValidator()
-{
-  Serial.println("Validating form.");
-  boolean valid = true;
-
-  int l = server.arg(stringParam.getId()).length();
-  if (l < 3)
-  {
-    stringParam.errorMessage = "Please provide at least 3 characters for this test!";
-    valid = false;
-  }
-
-  return valid;
 }
