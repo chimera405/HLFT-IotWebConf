@@ -1,7 +1,26 @@
+/*
+ * Contributors:  Christian Richardson Quiday Escobia
+ *                Le Thanh Tung
+ *                Duong Thanh Minh
+ *                Nguyen Tran Minh Luan
+ *
+ * Description: 
+ *      This project demonstrates how WiFi connection settings 
+ *      can be managed through a Captive Portal provided by 
+ *      the IotWebConf library. One major highlight is that the 
+ *      "Sign in to network" automatically pops up in the 
+ *      browser of the connected device: mobile/laptop/computer. 
+ *      Moreover, the sensor data from the Thing is displayed 
+ *      on the webpage.
+ *
+ * Default name of the thing: testThing //Initial Name of the Thing, where it is used as the SSID of its own Access Point
+ * Default password: smrtTHNG8266 // Initial password to connect to the Thing, when it creates its own Access Point
+ */
+
 #include "Button2.h"      // Lib for OLED display
 #include "SSD1306Wire.h"  // Lib for environment sensor BME280
-#include  <Adafruit_BME280.h>         // Lib for handling button events
-#include <IotWebConf.h>
+#include <Adafruit_BME280.h>    // Lib for handling button events
+#include <IotWebConf.h>   // Lib for web configuration portal
 
 SSD1306Wire  display(0x3c,5,4); // create an SSD1306Wire object with name 
                                 // "display" with I2C at the pins 5 and 4 and
@@ -9,18 +28,18 @@ SSD1306Wire  display(0x3c,5,4); // create an SSD1306Wire object with name
 
 Adafruit_BME280 bme; // create BM280 object using I2C with name "bme"
 
-//Wifi config
-const char thingName[] = "Rerorerorerorero!";
-const char wifiInitialApPassword[] = "landesstelle";
+// Web Config Portal
+const char thingName[] = "IotWebConfServer";
+const char wifiInitialApPassword[] = "123456789";
 
 #define STRING_LEN 128
 #define NUMBER_LEN 32
 
-// -- Configuration specific key. The value should be modified if config structure was changed.
+// Configuration specific key. The value should be modified if config structure was changed.
 #define CONFIG_VERSION "dem1"
 
-// -- When CONFIG_PIN is pulled to ground on startup, the Thing will use the initial
-//      password to build an AP. (E.g. in case of lost password)
+// When CONFIG_PIN is pulled to ground on startup, the Thing will use the initial
+// password to build an AP. (E.g. in case of lost password)
 #define CONFIG_PIN 14
 
 // -- Status indicator pin.
